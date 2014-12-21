@@ -4,8 +4,7 @@ include:
 python-pip:
   pkg.installed
 
-
-{%- if 'monitor_master' in salt['grains.get']('roles', []) %}
+# {%- if 'monitor_master' in salt['grains.get']('roles', []) %}
 
 {%- from 'graphite/settings.sls' import graphite with context %}
 
@@ -29,9 +28,9 @@ install-deps:
       - python-devel
       - sqlite
       - bitmap
-{%- if grains['os'] != 'Amazon' %}
+  {%- if grains['os'] != 'Amazon' %}
       - bitmap-fonts-compat
-{%- endif %}
+  {%- endif %}
       - pycairo-devel
       - pkgconfig
       - python-gunicorn
@@ -39,12 +38,12 @@ install-deps:
 
 {%- if grains['os'] == 'Amazon' %}
 {%- set pkg_list = ['fixed-fonts', 'console-fonts', 'fangsongti-fonts', 'lucida-typewriter-fonts', 'miscfixed-fonts', 'fonts-compat'] %}
-{%- for fontpkg in pkg_list %}
+  {%- for fontpkg in pkg_list %}
 install-{{ fontpkg }}-on-amazon:
   pkg.installed:
     - sources:
       - bitmap-{{ fontpkg }}: http://mirror.centos.org/centos/6/os/x86_64/Packages/bitmap-{{ fontpkg }}-0.3-15.el6.noarch.rpm
-{%- endfor %}
+  {%- endfor %}
 {%- endif %}
 
 /tmp/graphite_reqs.txt:
@@ -102,7 +101,7 @@ graphite:
     - target: {{ graphite.whisper_dir }}
     - force: True
 
-{%- endif %}
+# {%- endif %}
 
 local-dirs:
   file.directory:
