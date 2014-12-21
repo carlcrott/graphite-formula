@@ -1,6 +1,10 @@
 include:
   - graphite.supervisor
 
+python-pip:
+  pkg.installed
+
+
 {%- if 'monitor_master' in salt['grains.get']('roles', []) %}
 
 {%- from 'graphite/settings.sls' import graphite with context %}

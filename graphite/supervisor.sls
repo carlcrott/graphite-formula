@@ -31,8 +31,6 @@ supervisor:
 
 
 
-
-
 /etc/init.d/supervisord:
   file.managed:
     - source: salt://graphite/files/supervisor/supervisor.init
