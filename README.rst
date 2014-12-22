@@ -9,6 +9,60 @@ Formula to set up and configure graphite servers on Debian and RedHat systems
     See the full `Salt Formulas installation and usage instructions
     <http://docs.saltstack.com/en/latest/topics/development/conventions/formulas.html>`_.
 
+
+Configuring
+================
+Option A: Manually place formulas ::
+
+    mkdir -p /srv/formulas/ # Default formula dir
+    cd /srv/formulas
+    git clone git@github.com:carlcrott/graphite-formula.git
+
+Edit minion and master files to search for formulas in above directory ::
+
+    # /etc/salt/master and /etc/salt/minion
+    file_roots:
+      base:
+        - /srv/salt
+        - /srv/formulas/graphite-formula
+
+Create grain for 'roles' and set to 'monitor_master' ::
+
+    # /srv/salt/monitor_master_grain.sls
+    roles:
+      grains.present:
+        - value: monitor_master
+
+
+Add graphite and "monitor_master" grain to top.sls ::
+
+    # /srv/salt/top.sls
+    base:
+      'awesome-monitor-node':
+        - monitor_master_grain
+        - graphite
+
+
+
+Configure pillar topfile ::
+
+    # /srv/pillar/top.sls
+    base:
+      '*-monitor':
+        - graphite
+
+Place graphite pillar ::
+
+    cp /graphite-formula/pillar.example  /srv/pillar/graphite.sls
+
+
+
+Option B: Reference formulas with GitFS:
+
+outlined in detail here:
+http://docs.saltstack.com/en/latest/topics/development/conventions/formulas.html#adding-a-formula-as-a-gitfs-remote
+
+
 Starting Service
 ================
 
