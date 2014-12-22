@@ -4,7 +4,7 @@ include:
 python-pip:
   pkg.installed
 
-# {%- if 'monitor_master' in salt['grains.get']('roles', []) %}
+{%- if 'monitor_master' in salt['grains.get']('roles', []) %}
 
 {%- from 'graphite/settings.sls' import graphite with context %}
 
@@ -15,7 +15,7 @@ install-deps:
       - python-pip
       - nginx
       - gcc
-      - MySQL-python
+      - python-mysqldb
 {%- if grains['os_family'] == 'Debian' %}
       - python-dev
       - sqlite3
@@ -101,7 +101,7 @@ graphite:
     - target: {{ graphite.whisper_dir }}
     - force: True
 
-# {%- endif %}
+{%- endif %}
 
 local-dirs:
   file.directory:

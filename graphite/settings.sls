@@ -29,7 +29,7 @@
 {%- set dbport         = gc.get('dbport', pc.get('dbport', '')) %}
 
 # default username and password are admin
-{%- set default_password = 'pbkdf2_sha256$10000$wZuRMciV2VKr$OAtsP+BksbR2DPQUEsY728cbIJmuYf4uXg4tLLGsvi4=' %}
+{%- set default_password = '$pbkdf2-sha256$20000$H0NozXmvtRYiZAzhnJMyRg$UhdlB5KgoZh9HF4zRkXqqJgt74k4ym7ptBnYeUJeWvU' %}
 {%- set admin_password = gc.get('admin_password', pc.get('admin_password', default_password)) %}
 {%- set admin_user     = gc.get('admin_user', pc.get('admin_user', 'admin')) %}
 {%- set admin_email    = gc.get('admin_email', pc.get('admin_email', 'graphite@example.com' )) %}
