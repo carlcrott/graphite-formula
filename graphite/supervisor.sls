@@ -1,3 +1,5 @@
+{%- from 'graphite/settings.sls' import graphite with context %}
+
 config-dir:
   file.directory:
     - names:
@@ -14,9 +16,11 @@ supervisor:
 # supervisorctl picks up /etc/init/supervisord.conf and attempts to use it as a supervisor configuration file
 # instead we want /etc/init/supervisor.conf -- which will strictly be used as an upstart file
 # via: http://cuppster.com/2011/05/18/using-supervisor-with-upstart/
-/etc/init/supervisor.conf:
+graphite_supervisor_conf:
   file.managed:
+    - name: {{ graphite.supervisor_conf }}
     - mode: 644
+{%- if grains['os_family'] == 'Debian' %}
     - contents: |
         description "supervisor"
 
@@ -25,10 +29,29 @@ supervisor:
 
         respawn
 
-        exec /usr/local/bin/supervisord --nodaemon --configuration /etc/supervisord.conf
+        exec /usr/local/bin/supervisord --nodaemon --configuration {{ graphite.supervisor_conf }}
+{%- elif grains['os_family'] == 'RedHat' %}
+    - contents: |
+        [supervisord]
+        nodaemon=false
+        logfile=/var/log/supervisor/supervisord.log
+        pidfile=/var/run/supervisord.pid
+        childlogdir=/var/log/supervisor
 
-/etc/init.d/supervisord:
+        [include]
+        files = /etc/supervisor/conf.d/*.conf
+
+        [rpcinterface:supervisor]
+        supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface
+
+        [supervisorctl]
+        serverurl=unix:///var/run//supervisor.sock
+{%- endif %}
+
+
+graphite_supervisor_init:
   file.managed:
+    - name: {{ graphite.supervisor_init }}
     - source: salt://graphite/files/supervisor/supervisor.init
     - mode: 755
     - template: jinja
@@ -46,4 +69,4 @@ supervisor-service:
     - enable: True
     - watch:
       - pip: supervisor
-      - file: /etc/init/supervisor.conf
+      - file: {{ graphite.supervisor_conf }}
