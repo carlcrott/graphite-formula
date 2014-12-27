@@ -12,8 +12,8 @@ install-deps:
       - python-pip
       - nginx
       - gcc
-      - MySQL-python
 {%- if grains['os_family'] == 'Debian' %}
+      - python-mysqldb
       - python-dev
       - sqlite3
       - libcairo2
@@ -22,6 +22,7 @@ install-deps:
       - pkg-config
       - gunicorn
 {%- elif grains['os_family'] == 'RedHat' %}
+      - MySQL-python
       - python-devel
       - sqlite
       - bitmap
