@@ -1,8 +1,6 @@
 include:
   - graphite.supervisor
 
-{%- if 'monitor_master' in salt['grains.get']('roles', []) %}
-
 {%- from 'graphite/settings.sls' import graphite with context %}
 
 install-deps:
@@ -26,23 +24,23 @@ install-deps:
       - python-devel
       - sqlite
       - bitmap
-{%- if grains['os'] != 'Amazon' %}
+  {%- if grains['os'] != 'Amazon' %}
       - bitmap-fonts-compat
-{%- endif %}
+  {%- endif %}
       - pycairo-devel
       - pkgconfig
       - python-gunicorn
-{%- endif %}
+{%- endif %} # end grains['os_family'] == 'Debian'
 
 {%- if grains['os'] == 'Amazon' %}
 {%- set pkg_list = ['fixed-fonts', 'console-fonts', 'fangsongti-fonts', 'lucida-typewriter-fonts', 'miscfixed-fonts', 'fonts-compat'] %}
-{%- for fontpkg in pkg_list %}
+  {%- for fontpkg in pkg_list %}
 install-{{ fontpkg }}-on-amazon:
   pkg.installed:
     - sources:
       - bitmap-{{ fontpkg }}: http://mirror.centos.org/centos/6/os/x86_64/Packages/bitmap-{{ fontpkg }}-0.3-15.el6.noarch.rpm
-{%- endfor %}
-{%- endif %}
+  {%- endfor %}
+{%- endif %} # end grains['os'] == 'Amazon'
 
 /tmp/graphite_reqs.txt:
   file.managed:
@@ -99,7 +97,7 @@ graphite:
     - target: {{ graphite.whisper_dir }}
     - force: True
 
-{%- endif %}
+{%- endif %} # end graphite.whisper_dir
 
 local-dirs:
   file.directory:
@@ -187,5 +185,3 @@ nginx:
     - reload: True
     - watch:
       - file: /etc/nginx/conf.d/graphite.conf
-
-{%- endif %}
