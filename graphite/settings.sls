@@ -31,10 +31,10 @@
 {%- endif %}
 
 # the only supported alternative here is mysql as dbtype
-{%- set dbtype         = gc.get('dbtype', pc.get('dbtype', 'sqlite3')) %}
+{%- set dbtype         = gc.get('dbtype', pc.get('dbtype', 'mysql')) %}
 {%- set dbname         = gc.get('dbname', pc.get('dbname', '/opt/graphite/storage/graphite.db')) %}
-{%- set dbuser         = gc.get('dbuser', pc.get('dbuser', '')) %}
-{%- set dbpassword     = gc.get('dbpassword', pc.get('dbpassword', '')) %}
+{%- set dbuser         = gc.get('dbuser', pc.get('dbuser', 'asdf')) %}
+{%- set dbpassword     = gc.get('dbpassword', pc.get('dbpassword', 'asdf')) %}
 {%- set dbhost         = gc.get('dbhost', pc.get('dbhost', '')) %}
 {%- set dbport         = gc.get('dbport', pc.get('dbport', '')) %}
 
