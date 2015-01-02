@@ -38,6 +38,7 @@ pip-install-diamond:
     - source: salt://graphite/files/diamond/handlers/GraphiteHandler.conf
     - mode: 644
     - template: jinja
+    - makedirs: True
     - context:
       graphite_host: {{ graphite.host }}
       graphite_port: {{ graphite.port }}
