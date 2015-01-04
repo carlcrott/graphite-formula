@@ -21,14 +21,14 @@
 {%- set whisper_dir    = gc.get('whisper_dir', pc.get('whisper_dir', '/opt/graphite/storage/whisper')) %}
 
 # default supervisor init file
-# filename must NOT be "supervisord.conf"
-{%- set supervisor_init = gc.get('supervisor_init', pc.get('supervisor_init', '/etc/init.d/supervisor')) %}
-{%- set supervisor_init_name = supervisor_init.split('/')|last() %}
+{%- set supervisor_init = gc.get('supervisor_init', pc.get('supervisor_init', '/etc/init.d/supervisord')) %}
 
 # default supervisor config file
-# filename should be: "supervisord.conf" 
-# as specified in the defaults: http://supervisord.org/configuration.html
-{%- set supervisor_conf = gc.get('supervisor_conf', pc.get('supervisor_conf', '/etc/supervisord.conf')) %}
+{%- if grains['os_family'] == 'Debian' %}
+    {%- set supervisor_conf = gc.get('supervisor_conf', pc.get('supervisor_conf', '/etc/init/supervisor.conf')) %}
+{%- elif grains['os_family'] == 'RedHat' %}
+    {%- set supervisor_init = gc.get('supervisor_init', pc.get('supervisor_init', '/etc/supervisord.conf')) %}
+{%- endif %}
 
 # the only supported alternative here is mysql as dbtype
 {%- set dbtype         = gc.get('dbtype', pc.get('dbtype', 'sqlite3')) %}
@@ -63,6 +63,5 @@
                           'admin_password' : admin_password,
                           'whisper_dir'    : whisper_dir,
                           'supervisor_init': supervisor_init,
-                          'supervisor_init_name': supervisor_init_name,
                           'supervisor_conf': supervisor_conf
                         }) %}
