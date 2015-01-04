@@ -27,7 +27,7 @@
 {%- if grains['os_family'] == 'Debian' %}
     {%- set supervisor_conf = gc.get('supervisor_conf', pc.get('supervisor_conf', '/etc/init/supervisor.conf')) %}
 {%- elif grains['os_family'] == 'RedHat' %}
-    {%- set supervisor_init = gc.get('supervisor_init', pc.get('supervisor_init', '/etc/supervisord.conf')) %}
+    {%- set supervisor_conf = gc.get('supervisor_conf', pc.get('supervisor_conf', '/etc/supervisord.conf')) %}
 {%- endif %}
 
 # the only supported alternative here is mysql as dbtype
