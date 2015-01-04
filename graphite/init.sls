@@ -12,8 +12,8 @@ install-deps:
       - python-pip
       - nginx
       - gcc
-      - MySQL-python
 {%- if grains['os_family'] == 'Debian' %}
+      - python-mysqldb
       - python-dev
       - sqlite3
       - libcairo2
@@ -22,16 +22,17 @@ install-deps:
       - pkg-config
       - gunicorn
 {%- elif grains['os_family'] == 'RedHat' %}
+      - MySQL-python
       - python-devel
       - sqlite
       - bitmap
-{%- if grains['os'] != 'Amazon' %}
+  {%- if grains['os'] != 'Amazon' %}
       - bitmap-fonts-compat
-{%- endif %}
+  {%- endif %}
       - pycairo-devel
       - pkgconfig
       - python-gunicorn
-{%- endif %}
+{%- endif %} # end grains['os_family'] == 'Debian'
 
 {%- if grains['os'] == 'Amazon' %}
 {%- set pkg_list = ['fixed-fonts', 'console-fonts', 'fangsongti-fonts', 'lucida-typewriter-fonts', 'miscfixed-fonts', 'fonts-compat'] %}
