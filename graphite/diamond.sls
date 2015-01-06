@@ -1,4 +1,3 @@
-{%- if 'monitor' in salt['grains.get']('roles',[]) %}
 {%- from 'graphite/settings.sls' import graphite with context %}
 
 # putting this in here for now as it is closely related to graphite
@@ -89,4 +88,3 @@ diamond:
       - file: /etc/diamond/handlers/GraphiteHandler.conf
       - file: /etc/diamond/handlers/GraphitePickleHandler.conf
 
-{%- endif %}
