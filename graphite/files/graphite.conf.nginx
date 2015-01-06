@@ -15,5 +15,20 @@ server {
     client_max_body_size    8m;
     client_body_buffer_size 128k;
 
+
+
+
+
+    if ($http_origin ~* 'https?:\/\/({{ grains['fdqn_ip4'] | replace(".", "\.") }})?.\X+') { set $cors 'true'; }
+    #if ($http_origin ~* 'https?:\/\/(146\.148\.94\.58)?.\X+') { set $cors 'true'; }
+
+    if ($cors = 'true') {
+        add_header  "Access-Control-Allow-Origin" $http_origin;
+        add_header  "Access-Control-Allow-Credentials" "true";
+        add_header  "Access-Control-Allow-Methods" "GET, OPTIONS";
+        add_header  "Access-Control-Allow-Headers" "Authorization, origin, accept";
+    }
+
+
   }
 }
