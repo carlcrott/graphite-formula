@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# diamond	Start the diamond statistics collector
+# diamond       Start the diamond statistics collector
 #
 # chkconfig: 2345 99 01
 # description: Diamond is a daemon and toolset for gathering system statistics \
@@ -18,55 +18,24 @@
 # Description:       Diamond is a daemon and toolset for gathering system statistics
 #                    and publishing them to Graphite.
 ### END INIT INFO
-
 # Author: Sam Bashton <sam@bashton.com>
+
 NAME=diamond
-DAEMON=/usr/bin/diamond
+DAEMON=/usr/local/bin/diamond
 DAEMON_ARGS="-p /var/run/diamond.pid"
 PIDFILE=/var/run/diamond.pid
 SCRIPTNAME=/etc/init.d/diamond
-LOCKDIR=/var/lock/subsys
-LOCKFILE=/var/lock/subsys/diamond
-
-. /etc/rc.d/init.d/functions
 
 start() {
-  if [ -d "${LOCKDIR}" -a -w "${LOCKDIR}" ]
-  then
-    if ( set -o noclobber; echo "$$" > "${LOCKFILE}") 2> /dev/null;
-    then
-      true
-    else
-      echo "Failed to acquire lockfile: ${LOCKFILE}."
-      echo "Held by $(cat ${LOCKFILE})"
-      echo_failure
-      return 1
-    fi
-  fi
-  
-  echo -n $"Starting $NAME: "
-  daemon --pidfile $PIDFILE $DAEMON $DAEMON_ARGS
-  retval=$?
-  if [ $retval -eq 0 ]; then
-    echo_success
-    echo
-  else
-    echo_failure
-    echo
-  fi
-  return $retval
+  echo -n "Starting $NAME: "
+  start-stop-daemon --start --pidfile $PIDFILE --exec $DAEMON -- $DAEMON_ARGS
+  echo -n "$NAME."
 }
 
 stop() {
   echo -n $"Stopping $NAME: "
-  killproc -p $PIDFILE $NAME
-  retval=$?
-  if [ -e "${LOCKFILE}" ]
-  then
-    rm -f "${LOCKFILE}"
-  fi
-  echo
-  return $retval
+  start-stop-daemon --stop --pidfile $PIDFILE --exec $DAEMON
+  echo -n "$NAME."
 }
 
 restart() {
@@ -81,14 +50,11 @@ case "$1" in
   stop)
     stop
     ;;
-  status)
-    status -p $PIDFILE $NAME
-    ;;
   restart)
     restart
     ;;
   *)
-    echo "Usage: $0 {start|stop|status}"
+    echo "Usage: $0 {start|stop|restart}"
     exit 2
     ;;
 esac
