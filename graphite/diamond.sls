@@ -27,6 +27,7 @@ pip-install-diamond:
 
 /etc/diamond/diamond.conf:
   file.managed:
+    - makedirs: True
     - source: salt://graphite/files/diamond/diamond.conf
     - mode: 644
     - template: jinja
